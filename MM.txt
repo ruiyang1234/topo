@@ -1,0 +1,381 @@
+from operator import attrgetter
+
+from ryu.app import simple_switch_13
+#from ryu import simple_switch_13
+from ryu.controller import ofp_event
+from ryu.controller.handler import MAIN_DISPATCHER, DEAD_DISPATCHER
+from ryu.controller.handler import set_ev_cls
+from ryu.lib import hub
+#import numpy as np 
+
+
+class SimpleMonitor13(simple_switch_13.SimpleSwitch13):
+
+    def __init__(self, *args, **kwargs):
+        super(SimpleMonitor13, self).__init__(*args, **kwargs)
+        self.datapaths = {}
+        self.monitor_thread = hub.spawn(self._monitor)
+        
+        print('please input z')
+        self.z=input()
+        print(self.z)
+        self.x=1
+        self.y=1
+
+    @set_ev_cls(ofp_event.EventOFPStateChange,
+                [MAIN_DISPATCHER, DEAD_DISPATCHER])
+    def _state_change_handler(self, ev):
+        datapath = ev.datapath
+        if ev.state == MAIN_DISPATCHER:
+            if datapath.id not in self.datapaths:
+                self.logger.debug('register datapath: %016x', datapath.id)
+                self.datapaths[datapath.id] = datapath
+        elif ev.state == DEAD_DISPATCHER:
+            if datapath.id in self.datapaths:
+                self.logger.debug('unregister datapath: %016x', datapath.id)
+                del self.datapaths[datapath.id]
+
+    def _monitor(self):
+        while True:
+            for dp in self.datapaths.values():
+                self._request_stats(dp)
+            hub.sleep(10)
+
+    def _request_stats(self, datapath):
+        self.logger.debug('send stats request: %016x', datapath.id)
+        ofproto = datapath.ofproto
+        parser = datapath.ofproto_parser
+
+        req = parser.OFPFlowStatsRequest(datapath)
+        datapath.send_msg(req)
+
+        req = parser.OFPPortStatsRequest(datapath, 0, ofproto.OFPP_ANY)
+        datapath.send_msg(req)
+        
+    #a=0 
+    #b=0   
+    #b=a
+    
+    @set_ev_cls(ofp_event.EventOFPFlowStatsReply, MAIN_DISPATCHER)
+    def _flow_stats_reply_handler(self, ev):
+        #global a
+        #global b
+        #b=a
+        #print(self.z)
+        
+        b=0
+        a=[]
+        body = ev.msg.body
+
+        self.logger.info('datapath         '
+                         'in-port  eth-dst           '
+                         'out-port packets  bytes')
+        self.logger.info('---------------- '
+                         '-------- ----------------- '
+                         '-------- -------- --------')
+        
+        
+        #c=max(a)
+        print(self.z)
+        
+        a=0                 
+        for flow in body:
+            
+            b=flow.priority
+            if b>a:
+                a=b
+            
+            
+        print(a)
+        i=a
+        
+        if int(self.z) == 1 and int(self.y) == 1:
+            print('success')
+            self.x=1
+            self.send_flow_mod_c(ev.msg.datapath,i)
+            self.y=0
+                         
+        #for stat in sorted([flow for flow in body if flow.priority == a],
+         #                  key=lambda flow: (flow.match['in_port'],
+          #                                   flow.match['eth_dst'])):
+        
+        #self.send_flow_mod_b(ev.msg.datapath,2)                                     
+        
+        
+        
+            #for stat in sorted([flow for flow in body if flow.priority == (i+2)], #key=lambda flow:(flow.match['in_port'])):
+            
+            
+            for stat in sorted([flow for flow in body if flow.priority == (i+2)],
+                               key=lambda flow: (flow.match['in_port'])):
+                           
+        #for stat in sorted([flow for flow in body if flow.priority == i],
+         #                  key=lambda flow: (flow.match['in_port'],
+          #                                   flow.match['eth_dst'])):
+                                                                                  
+            #if (stat.byte_count-int(2000*i)) < 2000:
+            
+            #self.send_flow_mod_b(ev.msg.datapath,i)
+            
+            
+            
+                if stat.byte_count < 2000:
+                    self.logger.info('%016x %17s %8x %8d %8d',
+                                     ev.msg.datapath.id,
+                                     stat.match['in_port'], 
+                                     stat.instructions[0].actions[0].port,
+                                     stat.packet_count, stat.byte_count)
+                else:
+                    self.logger.info('cut off the traffic')
+                    #self.send_flow_mod_a(ev.msg.datapath)
+                
+              
+                    #i
+                    #self.send_flow_del(ev.msg.datapath,stat.match['in_port'])
+                    if self.x==1:
+                    
+                        self.send_flow_mod_b(ev.msg.datapath,i)
+                        self.x=-1
+                
+                    #addition()
+                    #a=b
+                    #a=a+1
+                    #i=i+1
+                    self.logger.info('%016x %17s %8x %8d %8d',
+                                     ev.msg.datapath.id,
+                                     stat.match['in_port'],
+                                     stat.instructions[0].actions[0].port,
+                                     stat.packet_count, stat.byte_count)
+
+        else :
+                                   
+        
+            for stat in sorted([flow for flow in body if flow.priority == i],
+                               key=lambda flow: (flow.match['in_port'])):
+                           
+        #for stat in sorted([flow for flow in body if flow.priority == i],
+         #                  key=lambda flow: (flow.match['in_port'],
+          #                                   flow.match['eth_dst'])):
+                                                                                  
+            #if (stat.byte_count-int(2000*i)) < 2000:
+            
+            #self.send_flow_mod_b(ev.msg.datapath,i)
+            
+            
+            
+                if stat.byte_count < 2000:
+                    self.logger.info('%016x %17s %8x %8d %8d',
+                                     ev.msg.datapath.id,
+                                     stat.match['in_port'], 
+                                     stat.instructions[0].actions[0].port,
+                                     stat.packet_count, stat.byte_count)
+                else:
+                    self.logger.info('cut off the traffic')
+                    #self.send_flow_mod_a(ev.msg.datapath)
+                
+              
+                    #i
+                    #self.send_flow_del(ev.msg.datapath,stat.match['in_port'])
+                    
+                    if self.x==1:
+                        self.send_flow_mod_b(ev.msg.datapath,i)
+                        self.x=-1
+                    #addition()
+                    #a=b
+                    #a=a+1
+                    #i=i+1
+                    self.logger.info('%016x %17s %8x %8d %8d',
+                                     ev.msg.datapath.id,
+                                     stat.match['in_port'],
+                                     stat.instructions[0].actions[0].port,
+                                     stat.packet_count, stat.byte_count)
+                                     
+            
+    
+        
+                                  
+    def addition():
+        global a
+        a=a+1            
+                
+                
+            
+    def send_flow_mod_a(self,datapath):
+        
+        ofp = datapath.ofproto
+        ofp_parser = datapath.ofproto_parser
+
+        cookie = cookie_mask = 0
+        table_id = 0
+        idle_timeout = hard_timeout = 0
+        priority = 1
+        buffer_id = ofp.OFP_NO_BUFFER
+        #match = ofp_parser.OFPMatch(in_port=1,ipv4_src='10.0.0.2')
+        match = ofp_parser.OFPMatch(in_port=1)
+        #actions = [ofp_parser.OFPActionOutput(ofp.OFPP_NORMAL, 0)]
+        actionss = [ofp_parser.OFPActionOutput(0)]
+        inst = [ofp_parser.OFPInstructionActions(ofp.OFPIT_APPLY_ACTIONS,actionss)]
+        req = ofp_parser.OFPFlowMod(datapath, cookie, cookie_mask,
+                                    table_id, ofp.OFPFC_DELETE_STRICT,
+                                    idle_timeout, hard_timeout,
+                                    priority, buffer_id,
+                                    ofp.OFPP_ANY, ofp.OFPG_ANY,
+                                    ofp.OFPFF_SEND_FLOW_REM,match,inst)
+        datapath.send_msg(req)
+        
+        ofp = datapath.ofproto
+        ofp_parser = datapath.ofproto_parser
+
+        cookie = cookie_mask = 0
+        table_id = 0
+        idle_timeout = hard_timeout = 0
+        priority = 1
+        buffer_id = ofp.OFP_NO_BUFFER
+        #match = ofp_parser.OFPMatch(in_port=1,ipv4_src='10.0.0.2')
+        match = ofp_parser.OFPMatch(in_port=1)
+        #actions = [ofp_parser.OFPActionOutput(ofp.OFPP_NORMAL, 0)]
+        actionss = [ofp_parser.OFPActionOutput(0)]
+        inst = [ofp_parser.OFPInstructionActions(ofp.OFPIT_APPLY_ACTIONS,actionss)]
+        req = ofp_parser.OFPFlowMod(datapath, cookie, cookie_mask,
+                                    table_id, ofp.OFPFC_DELETE_STRICT,
+                                    idle_timeout, hard_timeout,
+                                    priority, buffer_id,
+                                    ofp.OFPP_ANY, ofp.OFPG_ANY,
+                                    ofp.OFPFF_SEND_FLOW_REM,match,inst)
+        datapath.send_msg(req)
+        
+    def send_flow_mod_b(self,datapath,i):
+        
+        ofp = datapath.ofproto
+        ofp_parser = datapath.ofproto_parser
+
+        cookie = cookie_mask = 0
+        table_id = 0
+        idle_timeout = hard_timeout = 0
+        priority = i+1
+        buffer_id = ofp.OFP_NO_BUFFER
+        #match = ofp_parser.OFPMatch(in_port=1,ipv4_src='10.0.0.2')
+        match = ofp_parser.OFPMatch(in_port=1)
+        port=2
+        #actions = [ofp_parser.OFPActionOutput(ofp.OFPP_NORMAL, 0)]
+        actionss = [ofp_parser.OFPActionOutput(0)]
+        inst = [ofp_parser.OFPInstructionActions(ofp.OFPIT_APPLY_ACTIONS,actionss)]
+        req = ofp_parser.OFPFlowMod(datapath, cookie, cookie_mask,
+                                    table_id, ofp.OFPFC_ADD,
+                                    idle_timeout, hard_timeout,
+                                    priority, buffer_id,
+                                    ofp.OFPP_ANY, ofp.OFPG_ANY,
+                                    ofp.OFPFF_SEND_FLOW_REM,match,inst)
+                                    
+        datapath.send_msg(req) 
+        
+        #match = ofp_parser.OFPMatch(in_port=2,ipv4_src='10.0.0.3')
+        match = ofp_parser.OFPMatch(in_port=2)
+        #actions = [ofp_parser.OFPActionOutput(ofp.OFPP_NORMAL, 0)]
+        port=1
+        actionss = [ofp_parser.OFPActionOutput(0)]
+        inst = [ofp_parser.OFPInstructionActions(ofp.OFPIT_APPLY_ACTIONS,actionss)]
+        req = ofp_parser.OFPFlowMod(datapath, cookie, cookie_mask,
+                                    table_id, ofp.OFPFC_ADD,
+                                    idle_timeout, hard_timeout,
+                                    priority, buffer_id,
+                                    ofp.OFPP_ANY, ofp.OFPG_ANY,
+                                    ofp.OFPFF_SEND_FLOW_REM,match,inst)
+                                    
+        datapath.send_msg(req)   
+        
+        
+    def send_flow_mod_c(self,datapath,i):
+        
+        ofp = datapath.ofproto
+        ofp_parser = datapath.ofproto_parser
+
+        cookie = cookie_mask = 0
+        table_id = 0
+        idle_timeout = hard_timeout = 0
+        priority = i+2
+        buffer_id = ofp.OFP_NO_BUFFER
+        #match = ofp_parser.OFPMatch(in_port=1,ipv4_src='10.0.0.2')
+        match = ofp_parser.OFPMatch(in_port=1)
+        port=2
+        #actions = [ofp_parser.OFPActionOutput(ofp.OFPP_NORMAL, 0)]
+        actionss = [ofp_parser.OFPActionOutput(port, 1)]
+        inst = [ofp_parser.OFPInstructionActions(ofp.OFPIT_APPLY_ACTIONS,actionss)]
+        req = ofp_parser.OFPFlowMod(datapath, cookie, cookie_mask,
+                                    table_id, ofp.OFPFC_ADD,
+                                    idle_timeout, hard_timeout,
+                                    priority, buffer_id,
+                                    ofp.OFPP_ANY, ofp.OFPG_ANY,
+                                    ofp.OFPFF_SEND_FLOW_REM,match,inst)
+                                    
+        datapath.send_msg(req) 
+        
+        #match = ofp_parser.OFPMatch(in_port=2,ipv4_src='10.0.0.3')
+        match = ofp_parser.OFPMatch(in_port=2)
+        #actions = [ofp_parser.OFPActionOutput(ofp.OFPP_NORMAL, 0)]
+        port=1
+        actionss = [ofp_parser.OFPActionOutput(port, 1)]
+        inst = [ofp_parser.OFPInstructionActions(ofp.OFPIT_APPLY_ACTIONS,actionss)]
+        req = ofp_parser.OFPFlowMod(datapath, cookie, cookie_mask,
+                                    table_id, ofp.OFPFC_ADD,
+                                    idle_timeout, hard_timeout,
+                                    priority, buffer_id,
+                                    ofp.OFPP_ANY, ofp.OFPG_ANY,
+                                    ofp.OFPFF_SEND_FLOW_REM,match,inst)
+                                    
+        datapath.send_msg(req)    
+        
+        
+    def send_flow_del(self,datapath,inport):
+        
+        ofp = datapath.ofproto
+        ofp_parser = datapath.ofproto_parser
+
+        cookie = cookie_mask = 0
+        table_id = 0
+        idle_timeout = 0
+        hard_timeout = 1
+        priority = 32768
+        buffer_id = ofp.OFP_NO_BUFFER
+        if inport ==1:
+            
+            match = ofp_parser.OFPMatch(in_port=1)
+            #actions = [ofp_parser.OFPActionOutput(2, 0)]
+            #inst = [ofp_parser.OFPInstructionActions(ofp.OFPIT_APPLY_ACTIONS,actions)]
+            req = ofp_parser.OFPFlowMod(datapath, cookie, cookie_mask,
+                                        table_id, ofp.OFPFC_DELETE,
+                                        idle_timeout, hard_timeout,
+                                        priority, buffer_id,
+                                        2, ofp.OFPG_ANY,
+                                        ofp.OFPFF_SEND_FLOW_REM)
+        else:
+            match = ofp_parser.OFPMatch(in_port=2)
+            #actions = [ofp_parser.OFPActionOutput(2, 0)]
+            #inst = [ofp_parser.OFPInstructionActions(ofp.OFPIT_APPLY_ACTIONS,actions)]
+            req = ofp_parser.OFPFlowMod(datapath, cookie, cookie_mask,
+                                        table_id, ofp.OFPFC_DELETE,
+                                        idle_timeout, hard_timeout,
+                                        priority, buffer_id,
+                                        1, ofp.OFPG_ANY,
+                                        ofp.OFPFF_SEND_FLOW_REM)
+            
+        datapath.send_msg(req)
+#    @set_ev_cls(ofp_event.EventOFPPortStatsReply, MAIN_DISPATCHER)
+ #   def _port_stats_reply_handler(self, ev):
+  #      body = ev.msg.body
+
+   #     self.logger.info('datapath         port     '
+    #                     'rx-pkts  rx-bytes rx-error '
+     #                    'tx-pkts  tx-bytes tx-error')
+      #  self.logger.info('---------------- -------- '
+       #                  '-------- -------- -------- '
+        #                 '-------- -------- --------')
+        #for stat in sorted(body, key=attrgetter('port_no')):
+         #   self.logger.info('%016x %8x %8d %8d %8d %8d %8d %8d',
+          #                   ev.msg.datapath.id, stat.port_no,
+           #                  stat.rx_packets, stat.rx_bytes, stat.rx_errors,
+            #                 stat.tx_packets, stat.tx_bytes, stat.tx_errors)
+#if __name__ == '__main__':
+ #   z=99
+    #setLogLevel( 'info' )
+    #myNetwork()                            
