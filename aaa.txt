@@ -1,0 +1,254 @@
+<rpc-reply message-id="urn:uuid:4781d033-e987-49b5-a028-75554336adf0" xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+ <data xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0" xmlns="urn:ietf:params:xml:ns:yang:ietf-netconf-monitoring">module Cisco-IOS-XR-aaa-lib-cfg {
+
+  /*** NAMESPACE / PREFIX DEFINITION ***/
+
+  namespace &quot;http://cisco.com/ns/yang/Cisco-IOS-XR-aaa-lib-cfg&quot;;
+
+
+  prefix &quot;aaa-lib-cfg&quot;;
+
+  /*** LINKAGE (IMPORTS / INCLUDES) ***/
+
+  import Cisco-IOS-XR-types { prefix &quot;xr&quot;; }
+
+  import Cisco-IOS-XR-aaa-lib-datatypes { prefix &quot;dt1&quot;; }
+
+  /*** META INFORMATION ***/
+
+  organization &quot;Cisco Systems, Inc.&quot;;
+
+  contact
+    &quot;Cisco Systems, Inc.
+     Customer Service
+
+     Postal: 170 West Tasman Drive
+     San Jose, CA 95134
+
+     Tel: +1 800 553-NETS
+
+     E-mail: cs-yang@cisco.com&quot;;
+
+  description 
+    &quot;This module contains a collection of YANG definitions
+     for Cisco IOS-XR aaa-lib package configuration.
+
+     This module contains definitions
+     for the following management objects:
+       aaa: Authentication, Authorization and Accounting
+
+     Copyright (c) 2013-2018 by Cisco Systems, Inc.
+     All rights reserved.&quot;;
+
+  revision &quot;2017-11-14&quot; {
+    description
+      &quot;Modified Accounting method to support local accounting as syslog&quot;;
+  }
+
+  revision &quot;2017-05-01&quot; {
+    description
+      &quot;Fixing backward compatibility error in module.&quot;;
+  }
+
+  revision &quot;2015-11-09&quot; {
+    description
+      &quot;IOS XR 6.0 revision.&quot;;
+  }
+
+
+  container aaa {
+    description &quot;Authentication, Authorization and Accounting&quot;;
+
+    container accountings {
+      description &quot;AAA accounting&quot;;
+
+      list accounting {
+        key &quot;type listname&quot;;
+        description &quot;Configurations related to accounting&quot;;
+        leaf type {
+          type xr:Cisco-ios-xr-string;
+          description
+            &quot;exec:Account exec sessions, commands: Account
+            CLI commands&quot;;
+        }
+        leaf listname {
+          type xr:Cisco-ios-xr-string;
+          description &quot;Named accounting list&quot;;
+        }
+        leaf rp-failover {
+          type dt1:Aaa-accounting-rp-failover;
+          description &quot;rpfailover&quot;;
+        }
+        leaf broadcast {
+          type dt1:Aaa-accounting-broadcast;
+          description &quot;Broadcast&quot;;
+        }
+        leaf type-xr {
+          type dt1:Aaa-accounting;
+          description &quot;Stop only/Start Stop&quot;;
+        }
+        leaf method1 {
+          type dt1:Aaa-method-accounting;
+          description &quot;Method Type&quot;;
+        }
+        leaf method2 {
+          type dt1:Aaa-method-accounting;
+          description &quot;Method Type&quot;;
+        }
+        leaf method3 {
+          type dt1:Aaa-method-accounting;
+          description &quot;Method Type&quot;;
+        }
+        leaf method4 {
+          type dt1:Aaa-method-accounting;
+          description &quot;Method Type&quot;;
+        }
+        leaf server-group-name1 {
+          type string;
+          description &quot;Server group name&quot;;
+        }
+        leaf server-group-name2 {
+          type string;
+          description &quot;Server group name&quot;;
+        }
+        leaf server-group-name3 {
+          type string;
+          description &quot;Server group name&quot;;
+        }
+        leaf server-group-name4 {
+          type string;
+          description &quot;Server group name&quot;;
+        }
+      }
+    }
+
+    container authorizations {
+      description &quot;AAA authorization&quot;;
+
+      list authorization {
+        key &quot;type listname&quot;;
+        description &quot;Configurations related to authorization&quot;;
+        leaf type {
+          type xr:Cisco-ios-xr-string;
+          description
+            &quot;network: Authorize IKE requests, commands:
+            Authorize CLI commands&quot;;
+        }
+        leaf listname {
+          type xr:Cisco-ios-xr-string;
+          description &quot;List name for AAA authorization&quot;;
+        }
+        leaf method1 {
+          type dt1:Aaa-method;
+          description &quot;Method Type&quot;;
+        }
+        leaf method2 {
+          type dt1:Aaa-method;
+          description &quot;Method Type&quot;;
+        }
+        leaf method3 {
+          type dt1:Aaa-method;
+          description &quot;Method Type&quot;;
+        }
+        leaf method4 {
+          type dt1:Aaa-method;
+          description &quot;Method Type&quot;;
+        }
+        leaf server-group-name1 {
+          type string;
+          description &quot;Server group name&quot;;
+        }
+        leaf server-group-name2 {
+          type string;
+          description &quot;Server group name&quot;;
+        }
+        leaf server-group-name3 {
+          type string;
+          description &quot;Server group name&quot;;
+        }
+        leaf server-group-name4 {
+          type string;
+          description &quot;Server group name&quot;;
+        }
+      }
+    }
+
+    container accounting-update {
+      presence &quot;Indicates a accounting-update node is configured.&quot;;
+      description &quot;Configuration related to 'update' accounting&quot;;
+      leaf type {
+        type dt1:Aaa-accounting-update;
+        mandatory true;
+        description &quot;newinfo/periodic&quot;;
+      }
+      leaf periodic-interval {
+        type uint32 {
+          range &quot;0..35791394&quot;;
+        }
+        units &quot;minute&quot;;
+        description &quot;Periodic update interval in minutes&quot;;
+      }
+    }
+
+    container banner {
+      description &quot;AAA banner&quot;;
+      leaf login {
+        type string;
+        description &quot;AAA login banner&quot;;
+      }
+    }
+
+    container authentications {
+      description &quot;AAA authentication&quot;;
+
+      list authentication {
+        key &quot;type listname&quot;;
+        description &quot;Configurations related to authentication&quot;;
+        leaf type {
+          type xr:Cisco-ios-xr-string;
+          description
+            &quot;login: Authenticate login sessions, ppp:
+            Authenticate ppp sessions&quot;;
+        }
+        leaf listname {
+          type xr:Cisco-ios-xr-string;
+          description &quot;List name for AAA authentication&quot;;
+        }
+        leaf method1 {
+          type dt1:Aaa-method;
+          description &quot;Method Type&quot;;
+        }
+        leaf method2 {
+          type dt1:Aaa-method;
+          description &quot;Method Type&quot;;
+        }
+        leaf method3 {
+          type dt1:Aaa-method;
+          description &quot;Method Type&quot;;
+        }
+        leaf method4 {
+          type dt1:Aaa-method;
+          description &quot;Method Type&quot;;
+        }
+        leaf server-group-name1 {
+          type string;
+          description &quot;Server group name&quot;;
+        }
+        leaf server-group-name2 {
+          type string;
+          description &quot;Server group name&quot;;
+        }
+        leaf server-group-name3 {
+          type string;
+          description &quot;Server group name&quot;;
+        }
+        leaf server-group-name4 {
+          type string;
+          description &quot;Server group name&quot;;
+        }
+      }
+    }
+  }
+}
+</data>
+</rpc-reply>
