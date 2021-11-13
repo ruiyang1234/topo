@@ -1,0 +1,163 @@
+{
+ "interface-configurations": {
+  "interface-configuration": [
+   {
+    "active": "act",
+    "interface-name": "Loopback100",
+    "interface-virtual": null,
+    "description": "***MERGE LOOPBACK 100****",
+    "ipv4-network": {
+     "addresses": {
+      "primary": {
+       "address": "1.1.1.100",
+       "netmask": "255.0.0.0"
+      }
+     }
+    }
+   },
+   {
+    "active": "act",
+    "interface-name": "Loopback110",
+    "interface-virtual": null,
+    "ipv4-network": {
+     "addresses": {
+      "primary": {
+       "address": "1.1.1.1",
+       "netmask": "255.255.255.255"
+      }
+     }
+    }
+   },
+   {
+    "active": "act",
+    "interface-name": "Loopback200",
+    "interface-virtual": null,
+    "description": "***MERGE LOOPBACK 200****",
+    "ipv4-network": {
+     "addresses": {
+      "primary": {
+       "address": "1.1.1.200",
+       "netmask": "255.255.255.255"
+      }
+     }
+    }
+   },
+   {
+    "active": "act",
+    "interface-name": "tunnel-ip12445",
+    "interface-virtual": null,
+    "description": "Testsimple2-39533-1044",
+    "bandwidth": "300000",
+    "ipv4-network": {
+     "addresses": {
+      "primary": {
+       "address": "10.220.45.41",
+       "netmask": "255.255.255.252"
+      }
+     }
+    },
+    "statistics": {
+     "load-interval": "30"
+    },
+    "tunnel-ip": {
+     "source": {
+      "type": "2",
+      "address": "185.121.241.14"
+     },
+     "destination": {
+      "type": "1",
+      "address": "38.135.71.23"
+     }
+    }
+   },
+   {
+    "active": "act",
+    "interface-name": "MgmtEth0/RP0/CPU0/0",
+    "ipv4-network": {
+     "addresses": {
+      "primary": {
+       "address": "10.10.20.175",
+       "netmask": "255.255.255.0"
+      }
+     }
+    }
+   },
+   {
+    "active": "act",
+    "interface-name": "GigabitEthernet0/0/0/0",
+    "description": "test",
+    "shutdown": null
+   },
+   {
+    "active": "act",
+    "interface-name": "GigabitEthernet0/0/0/1",
+    "shutdown": null
+   },
+   {
+    "active": "act",
+    "interface-name": "GigabitEthernet0/0/0/2",
+    "ipv6-network": {
+     "addresses": {
+      "regular-addresses": {
+       "regular-address": {
+        "address": "2001:cafe:cafe::1",
+        "prefix-length": "64",
+        "zone": "0"
+       }
+      }
+     }
+    },
+    "shutdown": null
+   },
+   {
+    "active": "act",
+    "interface-name": "GigabitEthernet0/0/0/3",
+    "ipv6-network": {
+     "addresses": {
+      "regular-addresses": {
+       "regular-address": {
+        "address": "2001:cafe:cafe:1::1",
+        "prefix-length": "64",
+        "zone": "0"
+       }
+      }
+     }
+    },
+    "shutdown": null
+   },
+   {
+    "active": "act",
+    "interface-name": "GigabitEthernet0/0/0/4",
+    "shutdown": null
+   },
+   {
+    "active": "act",
+    "interface-name": "GigabitEthernet0/0/0/5",
+    "shutdown": null
+   },
+   {
+    "active": "act",
+    "interface-name": "GigabitEthernet0/0/0/6",
+    "shutdown": null
+   },
+   {
+    "active": "act",
+    "interface-name": "GigabitEthernet0/0/0/0.1011",
+    "interface-mode-non-physical": "default",
+    "description": "Test description 11"
+   },
+   {
+    "active": "act",
+    "interface-name": "GigabitEthernet0/0/0/0.1012",
+    "interface-mode-non-physical": "default",
+    "description": "Test description 12"
+   },
+   {
+    "active": "act",
+    "interface-name": "GigabitEthernet0/0/0/0.1013",
+    "interface-mode-non-physical": "default",
+    "description": "Test description 13"
+   }
+  ]
+ }
+}
